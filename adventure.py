@@ -174,8 +174,11 @@ def main():
     # add_game_object( game_objects, "key",     40, 40, 300, 450 )
     add_game_object(game_objects, "clash_crown", 40, 40, 450, 250)
     add_game_object(game_objects, "door", 100, 100, 400, 150)
+    add_game_object(game_objects, "bridge_arena1_left", 60, 50, 335, 320)
+    add_game_object(game_objects, "bridge_arena1_right", 60, 50, 460, 320)
     add_game_object(game_objects, "mini_pekka", 35, 25, 400, 450)
     add_game_object(game_objects, "blue_flag", 50, 50, 400, 150)
+
 
     # create the window based on the map size
     screen = pygame.display.set_mode(game_objects["arena"]["image"].get_size())
@@ -302,7 +305,7 @@ def main():
 
         # If you need to debug where something is on the screen, you can draw it
         # using this helper method
-        # draw_marker( screen, Vector2(200,200) )
+        # draw_marker( screen, Vector2(460,320) )
 
         # Write some text to the screen. You can do something like this to show some hints or whatever you want.
         label = myfont.render("Hmm, what's on the other side of those bridges?", True, (255, 255, 51))
