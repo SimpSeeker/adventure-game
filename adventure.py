@@ -110,18 +110,18 @@ def game_over(game_objects, screen):
     """
     if pixel_collision(game_objects, "mini_pekka", "arena"):
         # Fill the screen with red
-        screen.fill((255, 0, 200))
+        screen.fill((255, 0, 100))
 
         # Display game over message
         font = pygame.font.SysFont('helvetica', 36)
-        game_over_text = font.render("Follow the Path", True, (255, 255, 255))
-        screen.blit(game_over_text, (200, 250))
+        game_over_text = font.render("You got this!", True, (255, 255, 255))
+        screen.blit(game_over_text, (300, 250))
 
         # Display options
         retry_text = font.render("Try Again", True, (255, 255, 255))
         quit_text = font.render("Quit", True, (255, 255, 255))
-        screen.blit(retry_text, (300, 350))
-        screen.blit(quit_text, (500, 350))
+        screen.blit(retry_text, (250, 350))
+        screen.blit(quit_text, (450, 350))
         pygame.display.flip()
 
     # Wait for user input
@@ -132,9 +132,9 @@ def game_over(game_objects, screen):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                if 300 <= x <= 420 and 350 <= y <= 380:  # Try Again clicked
+                if 250 <= x <= 400 and 350 <= y <= 380:  # Try Again clicked
                     return True
-                elif 500 <= x <= 580 and 350 <= y <= 380:  # Quit clicked
+                elif 450 <= x <= 510 and 350 <= y <= 380:  # Quit clicked
                     return False
 
 
@@ -174,7 +174,7 @@ def main():
     # add_game_object( game_objects, "key",     40, 40, 300, 450 )
     add_game_object(game_objects, "clash_crown", 40, 40, 450, 250)
     add_game_object(game_objects, "door", 100, 100, 400, 150)
-    add_game_object(game_objects, "mini_pekka", 40, 30, 400, 450)
+    add_game_object(game_objects, "mini_pekka", 35, 25, 400, 450)
     add_game_object(game_objects, "blue_flag", 50, 50, 400, 150)
 
     # create the window based on the map size
