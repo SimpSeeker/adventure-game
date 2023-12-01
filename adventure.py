@@ -108,21 +108,21 @@ def game_over(game_objects, screen):
     :param game_objects, screen:
     :return: -NA-
     """
-    if pixel_collision(game_objects, "mini_pekka", "arena"):
-        # Fill the screen with red
-        screen.fill((255, 0, 100))
 
-        # Display game over message
-        font = pygame.font.SysFont('helvetica', 36)
-        game_over_text = font.render("You got this!", True, (255, 255, 255))
-        screen.blit(game_over_text, (300, 250))
+    # Fill the screen with red
+    screen.fill((255, 0, 100))
 
-        # Display options
-        retry_text = font.render("Try Again", True, (255, 255, 255))
-        quit_text = font.render("Quit", True, (255, 255, 255))
-        screen.blit(retry_text, (250, 350))
-        screen.blit(quit_text, (450, 350))
-        pygame.display.flip()
+    # Display game over message
+    font = pygame.font.SysFont('helvetica', 36)
+    game_over_text = font.render("You got this!", True, (255, 255, 255))
+    screen.blit(game_over_text, (300, 250))
+
+    # Display options
+    retry_text = font.render("Try Again", True, (255, 255, 255))
+    quit_text = font.render("Quit", True, (255, 255, 255))
+    screen.blit(retry_text, (250, 350))
+    screen.blit(quit_text, (450, 350))
+    pygame.display.flip()
 
     # Wait for user input
     while True:
@@ -151,8 +151,12 @@ def restart_game(game_objects):
         crown_found = False
         is_started = False
         game_objects["clash_crown"]["visible"] = True
-        game_objects["door"]["visible"] = True
+        game_objects["king_tower"]["visible"] = True
         game_objects["blue_flag"]["visible"] = False
+        game_objects["guard_1_right"]["visible"] = False
+        game_objects["guard_2_right"]["visible"] = False
+        game_objects["guard_1_left"]["visible"] = False
+        game_objects["guard_2_left"]["visible"] = False
 
     return game_objects
 
@@ -172,12 +176,16 @@ def main():
     add_game_object(game_objects, "arena", 800, 600, 400, 300)
     # add_game_object(game_objects, "alien1", 30, 30, 100, 200)
     # add_game_object( game_objects, "key",     40, 40, 300, 450 )
-    add_game_object(game_objects, "clash_crown", 40, 40, 450, 250)
-    add_game_object(game_objects, "door", 100, 100, 400, 150)
-    add_game_object(game_objects, "bridge_arena1_left", 60, 50, 335, 320)
+    add_game_object(game_objects, "clash_crown", 40, 40, 450, 200)
+    add_game_object(game_objects, "king_tower", 70, 80, 400, 120)
+    add_game_object(game_objects, "bridge_arena1_left", 60, 50, 336, 320)
     add_game_object(game_objects, "bridge_arena1_right", 60, 50, 460, 320)
     add_game_object(game_objects, "mini_pekka", 35, 25, 400, 450)
-    add_game_object(game_objects, "blue_flag", 50, 50, 400, 150)
+    add_game_object(game_objects, "blue_flag", 30, 30, 400, 150)
+    add_game_object(game_objects, "guard_1_right", 20, 30, 450, 250)
+    add_game_object(game_objects, "guard_2_right", 20, 30, 500, 250)
+    add_game_object(game_objects, "guard_1_left", 20, 30, 350, 250)
+    add_game_object(game_objects, "guard_2_left", 20, 30, 360, 250)
 
 
     # create the window based on the map size
@@ -200,6 +208,16 @@ def main():
 
     # has the player found (moved on top of) the key to the door?
     crown_found = False
+
+    # are the guards from level 1 visible
+    game_objects["guard_1_right"]["visible"] = False
+    game_objects["guard_2_right"]["visible"] = False
+    game_objects["guard_1_left"]["visible"] = False
+    game_objects["guard_2_left"]["visible"] = False
+
+
+    visible_right = False
+    visible_left = False
 
     # Load the level
     level_number = 1
@@ -227,8 +245,16 @@ def main():
                 is_started = False
                 crown_found = False
                 game_objects["clash_crown"]["visible"] = True
-                game_objects["door"]["visible"] = True
+                game_objects["king_tower"]["visible"] = True
                 game_objects["blue_flag"]["visible"] = False
+
+        # Makes new text appear when player collides with bridges
+        if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_right"):
+            label_1 = myfont.render("Hmm, what's on the other side of those bridges?", True, (255, 255, 255))
+            screen.blit(label_1, (20, 20))
+
+            label_2 = myfont.render("Ohhhhh, that's whats on the other side of the bridges", True, (255, 255, 255))
+            screen.blit(label_2, (20, 20))
 
         # Check for game logic situation
         if is_alive:
@@ -261,7 +287,7 @@ def main():
         # Check for game logic situation
         if not crown_found and pixel_collision(game_objects, "mini_pekka", "clash_crown"):
             game_objects["clash_crown"]["visible"] = False
-            game_objects["door"]["visible"] = False
+            game_objects["king_tower"]["visible"] = False
             game_objects["blue_flag"]["visible"] = True
             crown_found = True
 
@@ -278,9 +304,9 @@ def main():
         #     pygame.mouse.set_visible( True )
         #     game_objects["mini_pekka"]["pos"] = game_objects["mini_pekka"]["initial_pos"]
 
-        if not crown_found and pixel_collision(game_objects, "mini_pekka", "blue_flag"):
+        if crown_found and pixel_collision(game_objects, "mini_pekka", "blue_flag"):
             game_objects["clash_crown"]["visible"] = False
-            game_objects["door"]["visible"] = False
+            game_objects["king_tower"]["visible"] = False
             game_objects["blue_flag"]["visible"] = True
             crown_found = True
             if level_number == 1:  # Transition to the next level
@@ -298,18 +324,52 @@ def main():
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             game_objects["mini_pekka"]["pos"] += Vector2(0, 5)
 
-        if pixel_collision(game_objects, "mini_pekka", "blue_flag"):
-            label = myfont.render("Next Level!", True, (255, 255, 0))
+        # if pixel_collision(game_objects, "mini_pekka", "blue_flag"):
+        #     label = myfont.render("Next Level!", True, (255, 255, 0))
+        #     screen.blit(label, (20, 40))
+        #     load_level(game_objects, 2)
+
+        if pixel_collision(game_objects, "mini_pekka", "guard_1_right") and visible_right:
+            label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
-            load_level(game_objects, 2)
+            game_over(game_objects, screen)
+            restart_game(game_objects)
+
+        if pixel_collision(game_objects, "mini_pekka", "guard_2_right") and visible_right:
+            label = myfont.render("You got caught!", True, (255, 255, 0))
+            screen.blit(label, (20, 40))
+            game_over(game_objects, screen)
+            restart_game(game_objects)
+
+        if pixel_collision(game_objects, "mini_pekka", "guard_1_left") and visible_left:
+            label = myfont.render("You got caught!", True, (255, 255, 0))
+            screen.blit(label, (20, 40))
+            game_over(game_objects, screen)
+            restart_game(game_objects)
+
+        if pixel_collision(game_objects, "mini_pekka", "guard_2_left") and visible_left:
+            label = myfont.render("You got caught!", True, (255, 255, 0))
+            screen.blit(label, (20, 40))
+            game_over(game_objects, screen)
+            restart_game(game_objects)
+
+        if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_right"):
+            visible_right = True
+            game_objects["guard_1_right"]["visible"] = True
+            game_objects["guard_2_right"]["visible"] = True
+
+        if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_left"):
+            visible_left = True
+            game_objects["guard_1_left"]["visible"] = True
+            game_objects["guard_2_left"]["visible"] = True
 
         # If you need to debug where something is on the screen, you can draw it
         # using this helper method
         # draw_marker( screen, Vector2(460,320) )
 
         # Write some text to the screen. You can do something like this to show some hints or whatever you want.
-        label = myfont.render("Hmm, what's on the other side of those bridges?", True, (255, 255, 51))
-        screen.blit(label, (20, 20))
+        label_1 = myfont.render("Hmm, what's on the other side of those bridges?", True, (255, 255, 51))
+        screen.blit(label_1, (20, 20))
 
         # Every time through the loop, increase the frame count.
         frame_count += 1
