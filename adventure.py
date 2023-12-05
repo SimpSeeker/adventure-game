@@ -161,6 +161,7 @@ def restart_game(game_objects):
     return game_objects
 
 
+
 def main():
     # Initialize pygame
     pygame.init()
@@ -219,8 +220,55 @@ def main():
     visible_right = False
     visible_left = False
 
+
     # Load the level
     level_number = 1
+
+    def move_guard_horizontal( guard_obj, max_range, movement):
+        """
+        Function to handle movement logic for guards.
+        :param guard_obj: Dictionary containing guard object information
+        :param max_range: Maximum movement range for the guard
+        :param movement: Movement vector for the guard
+        """
+        guard_obj["pos"] += movement
+
+        # Check if guard reached the maximum range, reverse their movement direction
+        if (guard_obj["pos"] - guard_obj["initial_pos"]).length() > max_range:
+            movement *= -1  # Reverse direction
+        return movement
+    # Define movement variables for guards
+    guard_1_right_movement = Vector2(1, 0)  # Movement direction for guard 1 (right)
+    guard_2_right_movement = Vector2(-1, 0)  # Movement direction for guard 2 (left)
+    guard_1_right_max_range = 5  # Maximum movement range for guard 1
+    guard_2_right_max_range = 5  # Maximum movement range for guard 2
+
+    # Update guard positions using the move_guard function
+    guard_1_right_movement = move_guard_horizontal(game_objects["guard_1_right"], guard_1_right_max_range, guard_1_right_movement)
+    guard_2_right_movement = move_guard_horizontal(game_objects["guard_2_right"], guard_2_right_max_range, guard_2_right_movement)
+
+    def move_guard_vertically(guard_obj, max_range, movement):
+        """
+        Function to handle vertical movement logic for guards.
+        :param guard_obj: Dictionary containing guard object information
+        :param max_range: Maximum movement range for the guard
+        :param movement: Movement vector for the guard
+        """
+        guard_obj["pos"] += movement
+
+        # Check if guard reached the maximum range, reverse their movement direction
+        if abs((guard_obj["pos"].y - guard_obj["initial_pos"].y)) > max_range:
+            movement *= -1  # Reverse direction
+        return movement
+
+    guard_1_left_movement = Vector2(0, 1)  # Movement direction for guard 1 left (down)
+    guard_2_left_movement = Vector2(0, -1)  # Movement direction for guard 2 left (up)
+    guard_1_left_max_range = 5  # Maximum movement range for guard 1 left
+    guard_2_left_max_range = 5  # Maximum movement range for guard 2 left
+
+    # Update guard positions using the move_guard_vertically function
+    guard_1_left_movement = move_guard_vertically(game_objects["guard_1_left"], guard_1_left_max_range, guard_1_left_movement)
+    guard_2_left_movement = move_guard_vertically(game_objects["guard_2_left"], guard_2_left_max_range, guard_2_left_movement)
 
     # This is the main game loop. In it, we must:
     # - check for events
@@ -358,10 +406,23 @@ def main():
             game_objects["guard_1_right"]["visible"] = True
             game_objects["guard_2_right"]["visible"] = True
 
+        # If both guards are visible, move them
+        if game_objects["guard_1_right"]["visible"] == True and game_objects["guard_2_right"]["visible"] == True:
+            guard_1_right_movement = move_guard_horizontal(game_objects["guard_1_right"], guard_1_right_max_range, guard_1_right_movement)
+            guard_2_right_movement = move_guard_horizontal(game_objects["guard_2_right"], guard_2_right_max_range, guard_2_right_movement)
+
         if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_left"):
             visible_left = True
             game_objects["guard_1_left"]["visible"] = True
             game_objects["guard_2_left"]["visible"] = True
+
+        if game_objects["guard_1_left"]["visible"] == True and game_objects["guard_2_left"]["visible"] == True:
+            guard_1_left_movement = move_guard_vertically(game_objects["guard_1_left"], guard_1_left_max_range, guard_1_left_movement)
+            guard_2_left_movement = move_guard_vertically(game_objects["guard_2_left"], guard_2_left_max_range, guard_2_left_movement)
+
+
+
+
 
         # If you need to debug where something is on the screen, you can draw it
         # using this helper method
