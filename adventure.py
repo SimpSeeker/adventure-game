@@ -177,7 +177,7 @@ def main():
     add_game_object(game_objects, "arena", 800, 600, 400, 300)
     # add_game_object(game_objects, "alien1", 30, 30, 100, 200)
     # add_game_object( game_objects, "key",     40, 40, 300, 450 )
-    add_game_object(game_objects, "clash_crown", 40, 40, 450, 200)
+    add_game_object(game_objects, "clash_crown", 40, 40, 470, 210)
     add_game_object(game_objects, "king_tower", 70, 80, 400, 120)
     add_game_object(game_objects, "bridge_arena1_left", 60, 50, 336, 320)
     add_game_object(game_objects, "bridge_arena1_right", 60, 50, 460, 320)
@@ -185,8 +185,9 @@ def main():
     add_game_object(game_objects, "blue_flag", 30, 30, 400, 150)
     add_game_object(game_objects, "guard_1_right", 20, 30, 450, 250)
     add_game_object(game_objects, "guard_2_right", 20, 30, 500, 250)
-    add_game_object(game_objects, "guard_1_left", 20, 30, 350, 250)
+    add_game_object(game_objects, "guard_1_left", 20, 30, 330, 200)
     add_game_object(game_objects, "guard_2_left", 20, 30, 360, 250)
+    add_game_object(game_objects, "brick_wall1", 250, 200, 420, 235)
 
 
     # create the window based on the map size
@@ -270,6 +271,7 @@ def main():
     guard_1_left_movement = move_guard_vertically(game_objects["guard_1_left"], guard_1_left_max_range, guard_1_left_movement)
     guard_2_left_movement = move_guard_vertically(game_objects["guard_2_left"], guard_2_left_max_range, guard_2_left_movement)
 
+
     # This is the main game loop. In it, we must:
     # - check for events
     # - update the scene
@@ -282,6 +284,21 @@ def main():
                 sys.exit()
 
         if pixel_collision(game_objects, "mini_pekka", "arena"):
+            is_alive = False
+            pygame.mouse.set_visible(True)
+            if not game_over(game_objects, screen):
+                pygame.quit()
+                sys.exit()
+            else:
+                game_objects = restart_game(game_objects)
+                is_alive = True
+                is_started = False
+                crown_found = False
+                game_objects["clash_crown"]["visible"] = True
+                game_objects["king_tower"]["visible"] = True
+                game_objects["blue_flag"]["visible"] = False
+
+        if pixel_collision(game_objects, "mini_pekka", "brick_wall1"):
             is_alive = False
             pygame.mouse.set_visible(True)
             if not game_over(game_objects, screen):
@@ -417,7 +434,7 @@ def main():
             game_objects["guard_2_left"]["visible"] = True
 
         if game_objects["guard_1_left"]["visible"] == True and game_objects["guard_2_left"]["visible"] == True:
-            guard_1_left_movement = move_guard_vertically(game_objects["guard_1_left"], guard_1_left_max_range, guard_1_left_movement)
+            guard_1_left_movement = move_guard_horizontal(game_objects["guard_1_left"], guard_1_left_max_range, guard_1_left_movement)
             guard_2_left_movement = move_guard_vertically(game_objects["guard_2_left"], guard_2_left_max_range, guard_2_left_movement)
 
 
