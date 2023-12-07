@@ -125,39 +125,22 @@ def game_over(game_objects, screen):
                     return False
 
 
-def restart_game(game_objects):
-    """
-    Reset the game objects to their initial positions.
-    :param game_objects:
-    :return: -NA-
-    """
-    for object in game_objects.values():
-        init_pos = Vector2(object["initial_pos"].x, object["initial_pos"].y)
-        object["pos"] = init_pos
-        is_alive = True
-        crown_found = False
-        is_started = False
-        game_objects["clash_crown"]["visible"] = True
-        game_objects["king_tower"]["visible"] = True
-        game_objects["blue_flag"]["visible"] = False
-        game_objects["guard_1_right"]["visible"] = False
-        game_objects["guard_2_right"]["visible"] = False
-        game_objects["guard_1_left"]["visible"] = False
-        game_objects["guard_2_left"]["visible"] = False
-        game_objects["guard_3_right"]["visible"] = False
-        game_objects["brick_wall1"]["visible"] = True
-        game_objects["brick_wall2"]["visible"] = True
-        game_objects["brick_wall3"]["visible"] = False
-        game_objects["brick_wall4"]["visible"] = False
-
-
-
-    return game_objects
-
-
 def level1():
     # Set up the Level by placing the objects of interest
     game_objects = {}
+
+    def restart_game_level1(game_objects):
+        for object in game_objects.values():
+            init_pos = Vector2(object["initial_pos"].x, object["initial_pos"].y)
+            object["pos"] = init_pos
+            game_objects["clash_crown"]["visible"] = True
+            game_objects["king_tower"]["visible"] = True
+            game_objects["blue_flag"]["visible"] = False
+            game_objects["guard_1_right"]["visible"] = False
+            game_objects["guard_2_right"]["visible"] = False
+            game_objects["guard_1_left"]["visible"] = False
+            game_objects["guard_2_left"]["visible"] = False
+            game_objects["guard_3_right"]["visible"] = False
 
     #
     # Create the Game Objects and add them to the game_objects dictionary
@@ -175,15 +158,12 @@ def level1():
     add_game_object(game_objects, "guard_2_right", 20, 30, 500, 250)
     add_game_object(game_objects, "guard_1_left", 20, 30, 330, 200)
     add_game_object(game_objects, "guard_2_left", 20, 30, 360, 250)
-    add_game_object(game_objects, "brick_wall1", 250, 200, 420, 235)
     add_game_object(game_objects, "guard_3_right", 20, 30, 460, 200)
+    add_game_object(game_objects, "brick_wall1", 250, 200, 420, 235)
     add_game_object(game_objects, "brick_wall2", 250, 200, 420, 235)
     add_game_object(game_objects, "brick_wall3", 250, 200, 420, 235)
     add_game_object(game_objects, "brick_wall4", 250, 200, 420, 235)
     add_game_object(game_objects, "brick_wall5", 250, 200, 420, 235)
-
-
-
 
     # create the window based on the map size
     screen = pygame.display.set_mode(game_objects["arena1"]["image"].get_size())
@@ -212,17 +192,14 @@ def level1():
     game_objects["guard_1_left"]["visible"] = False
     game_objects["guard_2_left"]["visible"] = False
     game_objects["guard_3_right"]["visible"] = False
+    game_objects["brick_wall1"]["visible"] = True
     game_objects["brick_wall2"]["visible"] = False
     game_objects["brick_wall3"]["visible"] = False
     game_objects["brick_wall4"]["visible"] = False
     game_objects["brick_wall5"]["visible"] = False
 
-
-
-
     visible_right = False
     visible_left = False
-
 
     def move_guard_horizontal(guard_obj, max_range, movement):
         """
@@ -293,13 +270,15 @@ def level1():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level1(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
                 game_objects["clash_crown"]["visible"] = True
                 game_objects["king_tower"]["visible"] = True
                 game_objects["blue_flag"]["visible"] = False
+
+        game_objects["brick_wall1"]["visible"] = True
 
         if pixel_collision(game_objects, "mini_pekka", "brick_wall1"):
             is_alive = False
@@ -308,7 +287,7 @@ def level1():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level1(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
@@ -379,25 +358,25 @@ def level1():
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level1(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_right") and visible_right:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level1(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_1_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level1(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level1(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_right"):
             visible_right = True
@@ -427,6 +406,7 @@ def level1():
             game_objects["clash_crown"]["visible"] = False
             game_objects["king_tower"]["visible"] = False
             game_objects["blue_flag"]["visible"] = True
+            game_objects["brick_wall1"]["visible"] = False
             crown_found = True
             return
 
@@ -452,6 +432,18 @@ def level2():
     # Set up the Level by placing the objects of interest
     game_objects = {}
 
+    def restart_game_level2(game_objects):
+        for object in game_objects.values():
+            init_pos = Vector2(object["initial_pos"].x, object["initial_pos"].y)
+            object["pos"] = init_pos
+            game_objects["clash_crown"]["visible"] = True
+            game_objects["king_tower"]["visible"] = True
+            game_objects["blue_flag"]["visible"] = False
+            game_objects["guard_1_right"]["visible"] = False
+            game_objects["guard_2_right"]["visible"] = False
+            game_objects["guard_1_left"]["visible"] = False
+            game_objects["guard_2_left"]["visible"] = False
+            game_objects["guard_3_right"]["visible"] = False
     #
     # Create the Game Objects and add them to the game_objects dictionary
     #
@@ -469,8 +461,13 @@ def level2():
     add_game_object(game_objects, "guard_3_right", 20, 30, 460, 200)
     add_game_object(game_objects, "guard_1_left", 20, 30, 330, 230)
     add_game_object(game_objects, "guard_2_left", 20, 30, 375, 250)
-    add_game_object(game_objects, "brick_wall2", 250, 200, 395, 235)
     add_game_object(game_objects, "guard_3_right", 20, 30, 460, 200)
+    add_game_object(game_objects, "brick_wall1", 250, 200, 420, 235)
+    add_game_object(game_objects, "brick_wall2", 250, 200, 395, 235)
+    add_game_object(game_objects, "brick_wall3", 250, 200, 420, 235)
+    add_game_object(game_objects, "brick_wall4", 250, 200, 420, 235)
+    add_game_object(game_objects, "brick_wall5", 250, 200, 420, 235)
+
 
     # create the window based on the map size
     screen = pygame.display.set_mode(game_objects["arena2"]["image"].get_size())
@@ -493,12 +490,17 @@ def level2():
     # has the player found (moved on top of) the key to the door?
     crown_found = False
 
-    # are the guards from level 1 visible
+    # are the guards from level 2 visible
     game_objects["guard_1_right"]["visible"] = False
     game_objects["guard_2_right"]["visible"] = False
     game_objects["guard_1_left"]["visible"] = False
     game_objects["guard_2_left"]["visible"] = False
     game_objects["guard_3_right"]["visible"] = False
+    game_objects["brick_wall1"]["visible"] = False
+    game_objects["brick_wall2"]["visible"] = True
+    game_objects["brick_wall3"]["visible"] = False
+    game_objects["brick_wall4"]["visible"] = False
+    game_objects["brick_wall5"]["visible"] = False
 
     visible_right = False
     visible_left = False
@@ -576,13 +578,14 @@ def level2():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level2(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
                 game_objects["clash_crown"]["visible"] = True
                 game_objects["king_tower"]["visible"] = True
                 game_objects["blue_flag"]["visible"] = False
+
 
         if pixel_collision(game_objects, "mini_pekka", "brick_wall2"):
             is_alive = False
@@ -591,7 +594,7 @@ def level2():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level2(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
@@ -662,31 +665,31 @@ def level2():
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level2(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_right") and visible_right:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level2(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_3_right") and visible_right:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level2(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_1_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level2(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level2(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "bridge_arena1_right"):
             visible_right = True
@@ -744,6 +747,24 @@ def level3():
     # Set up the Level by placing the objects of interest
     game_objects = {}
 
+    def restart_game_level3(game_objects):
+        for object in game_objects.values():
+            init_pos = Vector2(object["initial_pos"].x, object["initial_pos"].y)
+            object["pos"] = init_pos
+            game_objects["clash_crown"]["visible"] = True
+            game_objects["king_tower"]["visible"] = True
+            game_objects["blue_flag"]["visible"] = False
+            game_objects["guard_1_right"]["visible"] = False
+            game_objects["guard_2_right"]["visible"] = False
+            game_objects["guard_1_left"]["visible"] = False
+            game_objects["guard_2_left"]["visible"] = False
+            game_objects["guard_3_right"]["visible"] = False
+            game_objects["brick_wall1"]["visible"] = True
+            game_objects["brick_wall2"]["visible"] = True
+            game_objects["brick_wall3"]["visible"] = False
+            game_objects["brick_wall4"]["visible"] = False
+            game_objects["brick_wall5"]["visible"] = False
+
     #
     # Create the Game Objects and add them to the game_objects dictionary
     #
@@ -796,7 +817,10 @@ def level3():
     game_objects["guard_1_left"]["visible"] = False
     game_objects["guard_2_left"]["visible"] = False
     game_objects["guard_3_right"]["visible"] = False
+    game_objects["brick_wall1"]["visible"] = True
+    game_objects["brick_wall2"]["visible"] = True
     game_objects["brick_wall3"]["visible"] = False
+    game_objects["brick_wall4"]["visible"] = False
     game_objects["brick_wall5"]["visible"] = False
     game_objects["red_clash_crown"]["visible"] = False
 
@@ -876,7 +900,7 @@ def level3():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level3(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
@@ -892,7 +916,7 @@ def level3():
                 pygame.quit()
                 sys.exit()
             else:
-                game_objects = restart_game(game_objects)
+                restart_game_level3(game_objects)
                 is_alive = True
                 is_started = False
                 crown_found = False
@@ -970,25 +994,25 @@ def level3():
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level3(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_right") and visible_right:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level3(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_3_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level3(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "guard_2_left") and visible_left:
             label = myfont.render("You got caught!", True, (255, 255, 0))
             screen.blit(label, (20, 40))
             game_over(game_objects, screen)
-            restart_game(game_objects)
+            restart_game_level3(game_objects)
 
         if pixel_collision(game_objects, "mini_pekka", "red_clash_crown"):
             brick_wall3_visible = False
@@ -1049,17 +1073,30 @@ def level3():
         pygame.time.Clock().tick(30)
 
 
+# def congratulations(screen):
+#     # Fill the screen with red
+#     screen.fill((255, 50, 100))
+#
+#     # Show the cursor when collided
+#     pygame.mouse.set_visible(True)
+#
+#     # Display game over message
+#     font = pygame.font.SysFont('helvetica', 36)
+#     game_over_text = font.render("Thanks for playing!!", True, (255, 255, 255))
+#     screen.blit(game_over_text, (300, 200))
+#     game_over_text_option = font.render("Hope you enjoyed the game!", True, (0, 75, 75))
+#     screen.blit(game_over_text_option, (175, 275))
+
+
 def main():
     # Initialize pygame
     pygame.init()
 
-    level1()
+    # level1()
 
-    level2()
+    # level2()
 
     level3()
-
-
 
     pygame.quit()
     sys.exit()
