@@ -1,0 +1,16 @@
+Creators: Eduardo Larios-Reyes, Ethan Cobler
+Title: Crown Grab
+
+
+Abstract: Puzzle type game where you collect crowns, while avoiding guards to be able to progress through the levels.
+Each level gets progressively harder with new additions in each level.
+
+Work Section:
+    Hours Spend: 37
+    Challenges: The collision while the characters were invisible were some of the trickier things in the beginning, the
+    other tricky thing was the showing different walls on the third level and making it so that they would change when certain
+    things would happen in game
+    Victories: We got most of the stuff working pretty quickly which was a solid victory and figuring out our challenges
+    Pros/Cons of partner:
+    Pros: Two sets of eyes on a project, able to test code quicker, able to plan and prepare easier
+    Cons: Ideas take longer to translate on some sections, staying on the same page can be tricky as well
